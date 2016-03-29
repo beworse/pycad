@@ -75,7 +75,7 @@ class LocalArc():#rysowanie lukow
 	
 	#do rysownia
 		self.array = [] #tablicy linii
-		self.n = 20 #dlugos tablicy
+		self.n = 30 #dlugos tablicy
 		
 	#kierunek rysowania
 		self.direction = True 
@@ -573,6 +573,44 @@ class LocalLine(): #klasa do obslugi linii
 	def WhatAmIInt(sefl):
 		return 0
 		
+	def changeToStraight(self):
+		
+		angle = atan2(self.yk - self.yp, self.xk - self.xp)
+		angle = degrees(angle)
+		
+	#x ma znaczaca role
+		if(-22.5 <= angle <= 22.5):
+			#print "1"
+			self.yk = self.yp
+		elif(157 <= angle <= 180)or(-180 <= angle <= -157):
+			#print "2"
+			self.yk = self.yp
+	#y ma znaczaca role
+		elif(67.5 <= angle <=  112.5):
+			#print "3"
+			self.xk = self.xp
+		elif(-112.5 <= angle <= -67.5):
+			#print "4"
+			self.xk = self.xp
+	#dla 45 stopni
+		else:
+			dist = self.distance() #dlugosc odcinka
+			sign = copysign(1.0,angle) #znak
+			angle = abs(angle) #kat w wartosiach od 0 do 180
+			
+			if(0 <= angle <= 45):
+				self.xk = self.xp + dist*cos(radians(45*sign))
+				self.yk = self.yp + dist*sin(radians(45*sign))
+			elif(45 <= angle <= 90):
+				self.xk = self.xp + dist*cos(radians(90*sign))
+				self.yk = self.yp + dist*sin(radians(90*sign))
+			elif(90 <= angle <= 135):
+				self.xk = self.xp + dist*cos(radians(135*sign))
+				self.yk = self.yp + dist*sin(radians(135*sign))
+			else: #135 <= angle <= 180
+				self.xk = self.xp + dist*cos(radians(180*sign))
+				self.yk = self.yp + dist*sin(radians(180*sign))
+		
 #------------ KOLORY ------------#
 	def setColor(self,r,g,b):
 		self.r = r
@@ -655,6 +693,9 @@ class LocalLine(): #klasa do obslugi linii
 				test = True	
 		return test
 #------------ OBLICZENIOWE ------------#
+	def distance(self):
+		return (((self.xk-self.xp)**2) + ((self.yk-self.yp)**2))**0.5
+		
 	def calcAB(self): #oblicza A,B dla wzoru y=Ax+B
 		if((self.xp-self.xk) != 0):
 			self.A = (self.yp-self.yk) / (self.xp-self.xk)

@@ -80,6 +80,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.qgl.s_newobj.connect(self.addedObjWidgetList)#dodano nowy obiekt do listy
 		self.qgl.s_filechanged.connect(self.FileNotSaved)
 		self.qgl.s_zoomend.connect(self.zoomSignal) 
+		self.qgl.s_knowpoint.connect(self.knowpoint)
 		
 	#lista
 		self.widgetlist.ui.pushButtonDown.clicked.connect(self.pushButtonDown)
@@ -250,6 +251,13 @@ class MainWindow(QtGui.QMainWindow):
 	def pushButtonNarz8(self):
 		self.qgl.setTool(8)
 	
+#------------ GUI XY ------------#
+	def knowpoint(self,nr): #ustawienie na GUI
+		if(nr == 1):
+			self.widgetxy.setxpyp(self.qgl.obj[-1].xp,self.qgl.obj[-1].yp)
+		elif(nr == 2):
+			self.widgetxy.setxkyk(self.qgl.obj[-1].xk,self.qgl.obj[-1].yk)
+	
 #------------ MYSZKA ------------#
 	def qglMouse(self): #wczytanie pozycji myszki na scenie i umieszczenie jej w status barze
 		mousepos = self.qgl.mousepos
@@ -285,17 +293,17 @@ class MainWindow(QtGui.QMainWindow):
 		
 		elif(key == QtCore.Qt.Key_Down):
 			self.qgl.changedyView(-self.dxdy)
-	
-#------------ KLAWIATURA ------------#
-	def FileNotSaved(self): #zmienia tytul okna gdy wystepuje taka potrzeba
-		if(self.f_saved == True):
-		#ustawienie tytulu okna na niezapisana
-			txt = str(self.windowTitle())
-			txt = "*"+txt 
-			self.setWindowTitle(txt)
-			self.f_saved = False 
-			self.ui.actionZapisz.setEnabled(True)
-	
+		
+		elif(key == QtCore.Qt.Key_Shift):
+			self.qgl.f_straight = True
+			self.qgl.update()
+			
+	def keyReleaseEvent(self, event): #puszczenie przycisku
+		key = event.key()
+		if(key == QtCore.Qt.Key_Shift):
+			self.qgl.f_straight = False
+			self.qgl.update()
+		
 #------------ MENUBAR  - WIDOK ------------#
 	def defaultView(self): #ustawia standarowy widok
 		self.ui.actionPomniejsz.setEnabled(True)
@@ -332,6 +340,16 @@ class MainWindow(QtGui.QMainWindow):
 		self.qgl.nextStepJourney()
 	
 #------------ MENUBAR  - PLIK ------------#
+	#--- Czy plik zapisany ---
+	def FileNotSaved(self): #zmienia tytul okna gdy wystepuje taka potrzeba
+		if(self.f_saved == True):
+		#ustawienie tytulu okna na niezapisana
+			txt = str(self.windowTitle())
+			txt = "*"+txt 
+			self.setWindowTitle(txt)
+			self.f_saved = False 
+			self.ui.actionZapisz.setEnabled(True)
+			
 	#--- Nowy plik ---
 	def newAction(self): #nowa scena 
 		if(self.f_saved == False):
@@ -341,6 +359,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.fname = ""
 		self.f_saved = True
 		self.setWindowTitle("PyCAD")
+		self.widgetlist.ui.listWidget.clear()
 		self.qgl.update()
 
 	#---Zakmniecie programu ---

@@ -29,7 +29,22 @@ class WidgetXY(QtGui.QWidget):
 		QtGui.QMainWindow.__init__(self)
 		ui = self.ui = gxy() 
 		self.ui.setupUi(self)
+		self.defaultText()
+	
+	def defaultText(self):
+		self.ui.lineEditxp.setText("x poczatkowe")
+		self.ui.lineEdityp.setText("y poczatkowe")
+		self.ui.lineEditxk.setText("x koncowe")
+		self.ui.lineEdityk.setText("y koncowe")
 		
+	def setxpyp(self,x,y):
+		self.ui.lineEditxp.setText(str(x))
+		self.ui.lineEdityp.setText(str(y))
+		
+	def setxkyk(self,x,y):
+		self.ui.lineEditxp.setText(str(x))
+		self.ui.lineEdityp.setText(str(y))
+	
 	def hidedxdy(self,co): #chowa niektore przycski
 		if(co == False):
 			self.ui.lineEditdxo.hide()

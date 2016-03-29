@@ -47,7 +47,9 @@ class GLWidget(QtOpenGL.QGLWidget):
 	s_next = QtCore.pyqtSignal(bool) #mozna lub nie mozna kliknac ponow
 	s_filechanged = QtCore.pyqtSignal() #zawartosc pliku sie zmienila
 	s_zoomend = QtCore.pyqtSignal(int)
+	s_knowpoint = QtCore.pyqtSignal(int) #znany jest pkt o nr
 	#s_out = QtCore.pyqtSignal() #wyjechano po za zalozony obszar
+	
 	
 #------------ INCJALIZCJA ------------#
 	def __init__(self, parent):
@@ -91,7 +93,8 @@ class GLWidget(QtOpenGL.QGLWidget):
 		self.f_update = False #czy aktualizowac scene
 		self.f_text = False #czy rysowac txt
 		self.f_arrows = False #czy rysowac strzalki
-	
+		self.f_straight = False #tylko proste linie
+		
 	def variables(self):#wszystkie zmienne tworozne sa tutaj
 		#myszka
 		self.mousepos = [] #ostatnia pozycja myszki po kliknieciu, przesunieciu
@@ -169,7 +172,10 @@ class GLWidget(QtOpenGL.QGLWidget):
 			self.s_mousepress.emit() #wyemitowanie sygnalu informujacego o wcisnieciu przycisku
 			
 			if(self.f_point==True):
-				self.nearestPoint(self.mousepos[0],self.mousepos[1])
+				if(self.tool != 2):
+					self.nearestPoint(self.mousepos[0],self.mousepos[1],False)
+				else:
+					self.nearestPoint(self.mousepos[0],self.mousepos[1],True)
 				
 			if(self.tool == 0): #klikniecie na obiekt
 				self.mouselastclick = self.mousepos
@@ -191,7 +197,10 @@ class GLWidget(QtOpenGL.QGLWidget):
 			
 			elif(self.tool == 8): #lapanie punktow
 				self.Tool8MouseClick()
-	
+				
+		elif (event.button() == QtCore.Qt.RightButton):
+			self.cancelDraw()
+			
 	def mouseReleaseEvent(self,event): #zwolnienie przycisku
 		if (event.button() == QtCore.Qt.LeftButton):
 			if(self.tool == 0):
@@ -206,7 +215,10 @@ class GLWidget(QtOpenGL.QGLWidget):
 	#czy szukany jest najblizszy pkt
 		if(self.f_point==True):
 			self.nearestrect.setDraw(True) #przed kolejnym pojawieniem sie tego obiektu trzeba zmienic flage 
-			self.nearestPoint(self.mousepos[0],self.mousepos[1])
+			if(self.tool != 2):
+				self.nearestPoint(self.mousepos[0],self.mousepos[1],False)
+			else:
+				self.nearestPoint(self.mousepos[0],self.mousepos[1],True)
 		else:
 			self.nearestrect.setDraw(False) #przed kolejnym pojawieniem sie tego obiektu trzeba zmienic flage 
 	
@@ -402,6 +414,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 			else:
 				self.addLine(self.mousepos[0],self.mousepos[1],self.mousepos[0]+0.1,self.mousepos[1]+0.01)
 			self.update()
+			self.s_knowpoint.emit(int(1))
 			self.f_update=True #aktualizacja sceny
 		elif(self.f_click == True):
 			if(self.f_catch == True):
@@ -415,6 +428,9 @@ class GLWidget(QtOpenGL.QGLWidget):
 	def Tool1MouseMove(self):#zmienia pozycja linii	
 		if(self.f_click == True):
 			self.obj[-1].ChangeEndPoint(self.mousepos[0],self.mousepos[1])
+			
+			if(self.f_straight == True):
+				self.obj[-1].changeToStraight()
 	
 	#Wiele linii#
 	def Tool2MouseClick(self):#rysowanie linii
@@ -434,11 +450,14 @@ class GLWidget(QtOpenGL.QGLWidget):
 			self.s_filechanged.emit()
 			#dodanie kolejnej lini
 			self.AddToJourney(0,len(self.obj)-1) 
-			self.addLine(self.obj[-1].xk , self.obj[-1].yk , self.obj[-1].xk+0.1 , self.obj[-1].yk+0.1)
+			self.addLine(self.obj[-1].xk , self.obj[-1].yk , self.obj[-1].xk , self.obj[-1].yk)
 	
 	def Tool2MouseMove(self):#zmienia pozycja linii	
 		if(self.f_click == True):
 			self.obj[-1].ChangeEndPoint(self.mousepos[0],self.mousepos[1])
+			
+			if(self.f_straight == True):
+				self.obj[-1].changeToStraight()
 	
 	#Luk#
 	def Tool3MouseClick(self): #rysowanie luku
@@ -1020,7 +1039,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 		if(value >=0):
 			self.mindistance = value
 	
-	def nearestPoint(self,x,y): #szuka najblizszego pkt
+	def nearestPoint(self,x,y,ingorelast): #szuka najblizszego pkt
 		self.f_catch = False
 		
 		if(self.mindistance > 0): 
@@ -1056,3 +1075,14 @@ class GLWidget(QtOpenGL.QGLWidget):
 				self.update()
 			else:
 				self.nearestrect.setDraw(False)
+				
+		#sprawdzenie czy nie jest to poczatek nowej lini, jesli to konieczne
+			if(ingorelast == True):
+				if(len(self.obj) > self.howmanyignore+1):
+					if(self.obj[-1].xp == self.indexcatch[0])and(self.obj[-1].yp == self.indexcatch[1]):
+						self.nearestrect.setDraw(False)
+						self.f_catch = False
+						
+					elif(self.obj[-1].xk == self.indexcatch[0])and(self.obj[-1].yk == self.indexcatch[1]):
+						self.nearestrect.setDraw(False)
+						self.f_catch = False
