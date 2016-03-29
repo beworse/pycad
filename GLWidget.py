@@ -708,11 +708,18 @@ class GLWidget(QtOpenGL.QGLWidget):
 		txt += str(obj.R)+"\n"
 		
 	#katy
-		txt +="50\n"#informuje o tym ze nastepny znak bedzie oznaczac kat poczatkowy
-		txt += str(obj.degreebegin)+"\n"
-		#txt += str(obj.degreeend)+"\n"
-		txt +="51\n"#informuje o tym ze nastepny znak bedzie oznaczac kat koncowy
-		txt += str(obj.degreeend)+"\n"
+		if(obj.direction == True):
+			txt +="50\n"#informuje o tym ze nastepny znak bedzie oznaczac kat poczatkowy
+			txt += str(obj.degreebegin)+"\n"
+			#txt += str(obj.degreeend)+"\n"
+			txt +="51\n"#informuje o tym ze nastepny znak bedzie oznaczac kat koncowy
+			txt += str(obj.degreeend)+"\n"
+		else:
+			txt +="50\n"#informuje o tym ze nastepny znak bedzie oznaczac kat poczatkowy
+			txt += str(obj.degreeend)+"\n"
+			#txt += str(obj.degreeend)+"\n"
+			txt +="51\n"#informuje o tym ze nastepny znak bedzie oznaczac kat koncowy
+			txt += str(obj.degreebegin)+"\n"
 		#txt += str(obj.degreebegin)+"\n"
 	#zakonczenie
 		txt +="0\n" #zakonczenie sekcji lini
@@ -772,12 +779,12 @@ class GLWidget(QtOpenGL.QGLWidget):
 		
 		while(read == True)and(txtline)and(variablesread != len(variablesrequired)):
 			txtline = f.readline()
-			txtline=txtline.replace("\n","").replace("\t","")
+			txtline=txtline.replace("\n","").replace("\t","").replace(" ","")
 			
 		#wspolrzedne poczatkowe:
 			if(txtline =='10'): #x
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 				
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'xp' in locals():
@@ -789,7 +796,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 					
 			elif(txtline =='20'): #y
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 					
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'yp' in locals():
@@ -802,7 +809,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 		#wspolrzedne koncowe:
 			elif(txtline =='11'): #xk
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 				
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'xk' in locals():
@@ -814,7 +821,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 				
 			elif(txtline =='21'): #yk
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 				
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'yk' in locals():
@@ -859,12 +866,12 @@ class GLWidget(QtOpenGL.QGLWidget):
 		
 		while(read == True)and(txtline)and(variablesread != len(variablesrequired)):
 			txtline = f.readline()
-			txtline=txtline.replace("\n","").replace("\t","")
+			txtline=txtline.replace("\n","").replace("\t","").replace(" ","")
 			
 		#wspolrzedne srodka:
 			if(txtline =='10'): #x
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 				
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'x' in locals():
@@ -876,7 +883,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 					
 			elif(txtline =='20'): #y
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 				
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'y' in locals():
@@ -889,7 +896,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 		#dlugosc promienia (R)
 			elif(txtline =='40'): #y
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 				
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'R' in locals():
@@ -902,7 +909,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 		#katy
 			elif(txtline =='50'): #kat poczatkowy
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 				
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'degreebegin' in locals():
@@ -914,7 +921,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 					
 			elif(txtline =='51'): #kat koncowy
 				txtline = f.readline()
-				txtline = txtline.replace("\n","").replace("\t","")
+				txtline = txtline.replace("\n","").replace("\t","").replace(" ","")
 				
 			#sprawdzenie czy zmienna nie zostala juz przypisana, jesli tak to blad w pliku
 				if 'degreeend' in locals():
@@ -922,7 +929,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 					read = False
 				else:
 					degreeend = float(txtline) #odczytuje xp
-					variablesread = variablesread + 1		
+					variablesread = variablesread + 1
 					
 		#koniec pliku (wg standardu)
 			elif(txtline =='EOF'):
@@ -937,6 +944,14 @@ class GLWidget(QtOpenGL.QGLWidget):
 		else:
 			if(read == True):
 				try:
+					if degreebegin > degreeend:
+						tmp = degreebegin
+						degreebegin = degreeend 
+						degreeend = tmp
+						direction = False
+					else:
+						direction = True
+					
 					xp = R * cos(radians(degreebegin))
 					yp = R * sin(radians(degreebegin))
 					xk = R * cos(radians(degreeend))
@@ -952,6 +967,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 					arc.reCalcArray()
 					arc.setColorBlack()
 					self.obj.append(arc)
+					self.direction = direction
 				except:
 					error += "nie mozna utworzyc LocalArc - bledne zmienne\n"
 					fok = False
@@ -964,24 +980,32 @@ class GLWidget(QtOpenGL.QGLWidget):
 		f = open(fname, 'r') #otwarcie lini
 		txtline = f.readline() #przeczytanie pierwszej linii
 		fok = True  #flaga ktora inforume o tym czy plik jest zgodny z formatem
+		entities = False #czy wczytuje odpowiednia sekcje
 		
 		while txtline:
-			txtline=txtline.replace("\n","").replace("\t","")
-			#txtline=txtline.replace("\t","")
+			txtline=txtline.replace("\n","").replace("\t","").replace(" ","")
+			txtline = txtline.lower()
 			
-			if(txtline == "LINE"): #linia
-				tmp = self.DXFLoadLine(f,txtline)
-				fok = fok * tmp[0] 
-			#drukuje blad
-				if(tmp[0] == False):
-					print tmp[1] 
+			if(entities == True): #zabezpiecznie - czytam jedynie sekcje entities!
+				if(txtline == "line"): #linia
+					tmp = self.DXFLoadLine(f,txtline)
+					fok = fok * tmp[0] 
+				#drukuje blad
+					if(tmp[0] == False):
+						print tmp[1] 
+					
+				elif(txtline == "arc"): #Luk
+					tmp = self.DXFLoadArc(f,txtline)
+					fok = fok * tmp[0] 
+				#drukuje blad
+					if(tmp[0] == False):
+						print tmp[1] 
 				
-			elif(txtline == "ARC"): #Luk
-				tmp = self.DXFLoadArc(f,txtline)
-				fok = fok * tmp[0] 
-			#drukuje blad
-				if(tmp[0] == False):
-					print tmp[1] 
+				elif(txtline == "endsec"): #koniec sekcji entities, wiec nie czytaj dalej
+					break
+			else:
+				if(txtline == "entities"): #sekcja entities
+					entities = True
 				
 			txtline = f.readline() #czyta kolejna linie
 		f.close()

@@ -48,35 +48,6 @@ class LocalArrows(): #rysuje groty strzalek
 		
 	def distance(self,x,y,x2,y2): #odleglosc miedzy dwoma punktami
 		return (((x-x2))**2+((y-y2)**2))**0.5
-
-class Colors(): #pomysl na nowa klase do przemyslenia, poki co nie jest wykorzystywana
-	def __init__(self): 
-		#klasa zawiera trzy zmienne r,g,b
-		self.setColorBlack() #domyslny kolor
-		
-		
-	def setColorBlack(self): 
-		self.r = 0
-		self.g = 0
-		self.b = 0
-	
-	def setColorRed(self):
-		self.r = 1
-		self.g = 0
-		self.b = 0
-	 
-	def setColorBlue(self):
-		self.r = 0
-		self.g = 0
-		self.b = 1
-		
-	def setColorGreen(self): 
-		self.r = 0
-		self.g = 1
-		self.b = 0
-		
-	def setOtherColor(self):
-		pass
 	
 class LocalArc():#rysowanie lukow
 #------------ INCJALIZACJA ------------#
@@ -105,11 +76,15 @@ class LocalArc():#rysowanie lukow
 	#do rysownia
 		self.array = [] #tablicy linii
 		self.n = 20 #dlugos tablicy
-	
+		
+	#kierunek rysowania
+		self.direction = True 
+		
 	def flags(self):#flagi
 		self.f_draw = False #jesli flaga nie jest ustawiona nic nie zostanie narysowane
 		self.f_active = True #jest rysowany
 		self.f_clikable = True #czy mozna kliknac w ten obiekt
+		
 		self.f_marked = False
 	
 #------------ RYSOWANIE ------------#
@@ -222,6 +197,13 @@ class LocalArc():#rysowanie lukow
 			 self.degreeend = degrees(atan2(self.yk-self.y,self.xk-self.x)) #wyliczenie nowego konta koncowego
 			 ang  = self.degreeend - self.degreebegin #obliczenie nowej odleglosci katwoej
 			 
+			 
+		#kierunek rysowania
+		if self.degreebegin <= self.degreeend:
+			self.direction = True
+		else:
+			self.direction = False
+		
 		ang = ang/self.n
 		i=0
 		while(i<=self.n):
