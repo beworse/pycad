@@ -1,0 +1,24 @@
+<RCC>
+  <qresource prefix="qcad">
+    <file>ikony/qcad/Arc3P.png</file>
+    <file>ikony/qcad/Line2P.png</file>
+    <file>ikony/qcad/LineAngle.png</file>
+    <file>ikony/qcad/mLine2P.png</file>
+  </qresource>
+  <qresource prefix="iconarchive">
+    <file>ikony/iconarchive/arrow.png</file>
+    <file>ikony/iconarchive/catchp.png</file>
+    <file>ikony/iconarchive/close.png</file>
+    <file>ikony/iconarchive/cursor.png</file>
+    <file>ikony/iconarchive/new.png</file>
+    <file>ikony/iconarchive/open.png</file>
+    <file>ikony/iconarchive/save.png</file>
+    <file>ikony/iconarchive/saveas.png</file>
+    <file>ikony/iconarchive/select.png</file>
+    <file>ikony/iconarchive/size.png</file>
+    <file>ikony/iconarchive/sort.png</file>
+    <file>ikony/iconarchive/ZoomIn.png</file>
+    <file>ikony/iconarchive/ZoomNormal.png</file>
+    <file>ikony/iconarchive/ZoomOut.png</file>
+  </qresource>
+</RCC>
